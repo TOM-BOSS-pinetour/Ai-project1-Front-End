@@ -15,8 +15,8 @@ export default function ImageAnalysis() {
     const file = e.target.files?.[0];
     if (file) {
       setBlob(file);
-      setImageUrl(URL.createObjectURL(file)); // preview-д зориулж
-      console.log(file, "сонгогдсон файл");
+      setImageUrl(URL.createObjectURL(file));
+      // console.log(file, "сонгогдсон файл");
     }
   };
 
@@ -24,14 +24,16 @@ export default function ImageAnalysis() {
     if (!blob) return;
 
     const formData = new FormData();
-    formData.append("file", blob);
+    formData.append("image", blob);
 
     try {
       const { data } = await axios.post(
-        "http://localhost:1000/file/upload",
+        "http://localhost:1000/image/analyze",
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       console.log("Server response:", data);
@@ -40,11 +42,11 @@ export default function ImageAnalysis() {
     }
   };
 
-  useEffect(() => {
-    if (imageUrl) {
-      console.log("imageUrl (from state):", imageUrl);
-    }
-  }, [imageUrl]);
+  // useEffect(() => {
+  //   if (imageUrl) {
+  //     // console.log("imageUrl (from state):", imageUrl);
+  //   }
+  // }, [imageUrl]);
 
   function handleRemoveImage() {
     setImageUrl(null);
