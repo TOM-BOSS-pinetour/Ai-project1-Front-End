@@ -1,4 +1,3 @@
-// ChatBot.tsx
 import SendIcon from "../_icons/SendIcon";
 import XIcon from "../_icons/XIcon";
 
@@ -8,7 +7,7 @@ type ChatBotProps = {
 
 export default function ChatBot({ onClose }: ChatBotProps) {
   return (
-    <div className=" border h-118 rounded-lg bg-white">
+    <div className="border rounded-lg bg-white">
       <div className="h-12 px-4 py-2 flex justify-between items-center">
         <div className="text-[16px] font-bold">Chat assistant</div>
         <div
