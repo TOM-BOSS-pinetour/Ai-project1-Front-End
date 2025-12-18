@@ -1,61 +1,74 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import StarIcon from "@/app/_icons/StarIcon";
 import FileIcon from "../_icons/FileIcon";
 import ReloadIcon from "../_icons/ReloadIcon";
 import TrashIcon from "../_icons/TrashIcon";
 import axios from "axios";
+import { BACK_END_URL } from "@/app/_constants";
 
 export default function ImageAnalysis() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [blob, setBlob] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [fullText, setFullText] = useState("");
+  const [displayText, setDisplayText] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setBlob(file);
-      setImageUrl(URL.createObjectURL(file));
-      // console.log(file, "сонгогдсон файл");
+    const selectedFile = e.target.files?.[0];
+
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImageUrl(URL.createObjectURL(selectedFile));
     }
   };
 
   const handleGenerate = async () => {
-    if (!blob) return;
+    if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", blob);
+    formData.append("image", file);
 
     try {
       const { data } = await axios.post(
-        "http://localhost:1000/image/analyze",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        `${BACK_END_URL}/image/analyze`,
+        formData
       );
-      console.log("Server response:", data);
+
+      // console.log("Server response:", data);
+      setFullText(data.data.content);
+      setDisplayText("");
     } catch (err) {
       console.error("Upload failed:", err);
     }
   };
 
-  // useEffect(() => {
-  //   if (imageUrl) {
-  //     // console.log("imageUrl (from state):", imageUrl);
-  //   }
-  // }, [imageUrl]);
+  useEffect(() => {
+    if (!fullText) return;
+
+    let index = 0;
+
+    const interval = setInterval(() => {
+      index++;
+
+      if (index <= fullText.length) {
+        setDisplayText(fullText.slice(0, index));
+      } else {
+        clearInterval(interval);
+      }
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [fullText]);
 
   function handleRemoveImage() {
     setImageUrl(null);
-    setBlob(null);
+    setFile(null);
   }
 
   const handleReset = () => {
     setImageUrl(null);
-    setBlob(null);
+    setFile(null);
   };
 
   return (
@@ -106,7 +119,7 @@ export default function ImageAnalysis() {
       <div className="flex justify-end">
         <button
           onClick={handleGenerate}
-          disabled={!blob}
+          disabled={!file}
           className="py-2 px-3 bg-black text-white rounded-md cursor-pointer"
         >
           Generate
@@ -119,11 +132,9 @@ export default function ImageAnalysis() {
           <FileIcon />
           <div>Here is the summary</div>
         </div>
-        <input
-          disabled
-          placeholder="First, enter your image to recognize ingredients."
-          className="w-full py-2 px-3 rounded-md border"
-        />
+        <div className="w-full py-2 px-3 rounded-md border bg-gray-100 text-gray-500 cursor-not-allowed">
+          {displayText || "First, enter your image to recognize ingredients."}
+        </div>
       </div>
     </div>
   );
