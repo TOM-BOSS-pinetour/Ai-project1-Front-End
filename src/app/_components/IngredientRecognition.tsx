@@ -50,7 +50,7 @@ export default function IngredientRecognition() {
             <StarIcon />
             <div className="text-[20px]">Ingredient recognition</div>
           </div>
-          <div className="w-12 h-10 border rounded-md flex justify-center items-center">
+          <div className="cursor-pointer w-12 h-10 border rounded-md flex justify-center items-center">
             <ReloadIcon />
           </div>
         </div>

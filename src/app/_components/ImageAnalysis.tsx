@@ -81,7 +81,7 @@ export default function ImageAnalysis() {
         </div>
         <div
           onClick={handleReset}
-          className="w-12 h-10 border rounded-md flex justify-center items-center"
+          className="w-12 h-10 border rounded-md flex justify-center items-center cursor-pointer"
         >
           <ReloadIcon />
         </div>

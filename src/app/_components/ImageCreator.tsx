@@ -38,7 +38,7 @@ export default function ImageCreator() {
             <StarIcon />
             <div className="text-[20px]">Food image creator</div>
           </div>
-          <div className="w-12 h-10 border rounded-md flex justify-center items-center">
+          <div className="cursor-pointer w-12 h-10 border rounded-md flex justify-center items-center">
             <ReloadIcon />
           </div>
         </div>
