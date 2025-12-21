@@ -13,6 +13,7 @@ export default function ImageAnalysis() {
   const [file, setFile] = useState<File | null>(null);
   const [fullText, setFullText] = useState("");
   const [displayText, setDisplayText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -34,12 +35,13 @@ export default function ImageAnalysis() {
         `${BACK_END_URL}/image/analyze`,
         formData
       );
-
-      // console.log("Server response:", data);
+      setLoading(true);
       setFullText(data.data.content);
       setDisplayText("");
     } catch (err) {
       console.error("Upload failed:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +75,6 @@ export default function ImageAnalysis() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-2">
           <StarIcon />
@@ -91,7 +92,6 @@ export default function ImageAnalysis() {
         Upload a food photo, and AI will detect the ingredients.
       </div>
 
-      {/* File input or preview */}
       {imageUrl === null ? (
         <input
           type="file"
@@ -115,18 +115,20 @@ export default function ImageAnalysis() {
         </div>
       )}
 
-      {/* Generate button */}
       <div className="flex justify-end">
         <button
           onClick={handleGenerate}
-          disabled={!file}
-          className="py-2 px-3 bg-black text-white rounded-md cursor-pointer"
+          disabled={!file || loading}
+          className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center"
         >
-          Generate
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Generate"
+          )}
         </button>
       </div>
 
-      {/* Summary section */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2 text-[20px] font-bold">
           <FileIcon />

@@ -11,8 +11,10 @@ export default function IngredientRecognition() {
   const [text, setText] = useState("");
   const [displayedText, setDisplayedText] = useState("");
   const [generatedText, setGeneratedText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.post(`${BACK_END_URL}/ingredients`, {
         text: text,
@@ -21,16 +23,19 @@ export default function IngredientRecognition() {
       console.log("data:", data.ingredients);
     } catch (err) {
       console.error("Request failed:", err);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    setDisplayedText(""); // өмнөхийг цэвэрлэх
+    setDisplayedText("");
     if (!generatedText) return;
 
     let index = 0;
     const interval = setInterval(() => {
-      const char = generatedText.charAt(index); // charAt ашиглах
+      const char = generatedText.charAt(index);
       if (!char) {
         clearInterval(interval);
         return;
@@ -69,9 +74,14 @@ export default function IngredientRecognition() {
         <div className="flex justify-end">
           <button
             onClick={handleGenerate}
-            className="py-2 px-3 bg-black text-white rounded-md"
+            disabled={loading || !text.trim()}
+            className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center"
           >
-            Generate
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Generate"
+            )}
           </button>
         </div>
       </div>

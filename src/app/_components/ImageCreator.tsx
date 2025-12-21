@@ -5,6 +5,7 @@ import ImageIcon from "../_icons/ImageIcon";
 import ReloadIcon from "../_icons/ReloadIcon";
 import axios from "axios";
 import { useState } from "react";
+import { BACK_END_URL } from "../_constants";
 
 export default function ImageCreator() {
   const [prompt, setPrompt] = useState("");
@@ -16,10 +17,9 @@ export default function ImageCreator() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:1000/image/generate",
-        { prompt }
-      );
+      const { data } = await axios.post(`${BACK_END_URL}/image/generate`, {
+        prompt,
+      });
       setImage(data.image);
       console.log("response", data);
     } catch (err) {
@@ -57,10 +57,14 @@ export default function ImageCreator() {
         <div className="flex justify-end">
           <button
             onClick={handleGenerate}
-            className="py-2 px-3 bg-black text-white rounded-md"
             disabled={loading}
+            className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center"
           >
-            {loading ? "Generating..." : "Generate"}
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Generate"
+            )}
           </button>
         </div>
       </div>
