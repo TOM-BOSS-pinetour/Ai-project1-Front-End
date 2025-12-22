@@ -21,7 +21,6 @@ export default function ImageCreator() {
         prompt,
       });
       setImage(data.image);
-      console.log("response", data);
     } catch (err) {
       console.error(err);
       alert("Failed to generate image");
@@ -57,7 +56,7 @@ export default function ImageCreator() {
         <div className="flex justify-end">
           <button
             onClick={handleGenerate}
-            disabled={loading}
+            disabled={loading || !prompt.trim()}
             className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center"
           >
             {loading ? (
@@ -85,7 +84,11 @@ export default function ImageCreator() {
         ) : (
           <input
             disabled
-            placeholder="First, enter your text to generate an image."
+            placeholder={
+              loading
+                ? "First, enter your text to generate an image."
+                : "generating"
+            }
             className="w-full py-2 px-3 rounded-md border"
           />
         )}

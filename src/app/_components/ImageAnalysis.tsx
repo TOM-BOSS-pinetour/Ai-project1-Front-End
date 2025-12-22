@@ -31,11 +31,12 @@ export default function ImageAnalysis() {
     formData.append("image", file);
 
     try {
+      setLoading(true);
+
       const { data } = await axios.post(
         `${BACK_END_URL}/image/analyze`,
         formData
       );
-      setLoading(true);
       setFullText(data.data.content);
       setDisplayText("");
     } catch (err) {
@@ -71,6 +72,8 @@ export default function ImageAnalysis() {
   const handleReset = () => {
     setImageUrl(null);
     setFile(null);
+    setFullText("");
+    setDisplayText("");
   };
 
   return (
@@ -119,7 +122,7 @@ export default function ImageAnalysis() {
         <button
           onClick={handleGenerate}
           disabled={!file || loading}
-          className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center"
+          className="py-2 px-3 bg-black text-white rounded-md flex items-center justify-center cursor-pointer"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -134,9 +137,16 @@ export default function ImageAnalysis() {
           <FileIcon />
           <div>Here is the summary</div>
         </div>
-        <div className="w-full py-2 px-3 rounded-md border bg-gray-100 text-gray-500 cursor-not-allowed">
+
+        <textarea
+          disabled
+          value={loading ? "Thinking" : displayText}
+          placeholder="First, enter your text to recognize ingredients."
+          className="w-full py-2 px-3 rounded-md border resize-none min-h-24"
+        />
+        {/* <div className="w-full py-2 px-3 rounded-md border bg-gray-100 text-gray-500 cursor-not-allowed">
           {displayText || "First, enter your image to recognize ingredients."}
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -20,7 +20,6 @@ export default function IngredientRecognition() {
         text: text,
       });
       setGeneratedText(data.ingredients);
-      console.log("data:", data.ingredients);
     } catch (err) {
       console.error("Request failed:", err);
       setLoading(false);
@@ -92,11 +91,11 @@ export default function IngredientRecognition() {
           <div>Identified Ingredients</div>
         </div>
 
-        <input
+        <textarea
           disabled
-          value={displayedText}
+          value={loading ? "Thinking" : displayedText}
           placeholder="First, enter your text to recognize ingredients."
-          className="w-full py-2 px-3 rounded-md border"
+          className="w-full py-2 px-3 rounded-md border resize-none min-h-24"
         />
       </div>
     </div>
