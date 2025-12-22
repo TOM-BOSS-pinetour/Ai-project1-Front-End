@@ -14,6 +14,7 @@ export default function ImageAnalysis() {
   const [fullText, setFullText] = useState("");
   const [displayText, setDisplayText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [thinkingDots, setThinkingDots] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -75,6 +76,22 @@ export default function ImageAnalysis() {
     setFullText("");
     setDisplayText("");
   };
+
+  useEffect(() => {
+    if (!loading) {
+      setThinkingDots("");
+      return;
+    }
+
+    let count = 0;
+
+    const interval = setInterval(() => {
+      count = (count + 1) % 4;
+      setThinkingDots(".".repeat(count));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -140,8 +157,8 @@ export default function ImageAnalysis() {
 
         <textarea
           disabled
-          value={loading ? "Thinking" : displayText}
-          placeholder="First, enter your text to recognize ingredients."
+          value={loading ? `Thinking${thinkingDots}` : displayText}
+          placeholder="First, enter your image to recognize an ingredients."
           className="w-full py-2 px-3 rounded-md border resize-none min-h-24"
         />
       </div>

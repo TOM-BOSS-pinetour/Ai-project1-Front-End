@@ -12,6 +12,7 @@ export default function IngredientRecognition() {
   const [displayedText, setDisplayedText] = useState("");
   const [generatedText, setGeneratedText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [thinkingDots, setThinkingDots] = useState("");
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -45,6 +46,22 @@ export default function IngredientRecognition() {
 
     return () => clearInterval(interval);
   }, [generatedText]);
+
+  useEffect(() => {
+    if (!loading) {
+      setThinkingDots("");
+      return;
+    }
+
+    let count = 0;
+
+    const interval = setInterval(() => {
+      count = (count + 1) % 4;
+      setThinkingDots(".".repeat(count));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   return (
     <div className="flex gap-6 flex-col">
@@ -93,7 +110,7 @@ export default function IngredientRecognition() {
 
         <textarea
           disabled
-          value={loading ? "Thinking" : displayedText}
+          value={loading ? `Thinking${thinkingDots}` : displayedText}
           placeholder="First, enter your text to recognize ingredients."
           className="w-full py-2 px-3 rounded-md border resize-none min-h-24"
         />

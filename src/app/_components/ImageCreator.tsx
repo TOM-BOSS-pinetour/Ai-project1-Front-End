@@ -4,13 +4,14 @@ import StarIcon from "@/app/_icons/StarIcon";
 import ImageIcon from "../_icons/ImageIcon";
 import ReloadIcon from "../_icons/ReloadIcon";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BACK_END_URL } from "../_constants";
 
 export default function ImageCreator() {
   const [prompt, setPrompt] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [thinkingDots, setThinkingDots] = useState("");
 
   const handleGenerate = async () => {
     if (!prompt) return;
@@ -28,6 +29,22 @@ export default function ImageCreator() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!loading) {
+      setThinkingDots("");
+      return;
+    }
+
+    let count = 0;
+
+    const interval = setInterval(() => {
+      count = (count + 1) % 4;
+      setThinkingDots(".".repeat(count));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, [loading]);
 
   return (
     <div className="flex gap-6 flex-col">
@@ -87,7 +104,7 @@ export default function ImageCreator() {
             placeholder={
               loading
                 ? "First, enter your text to generate an image."
-                : "generating"
+                : `Generating${thinkingDots}`
             }
             className="w-full py-2 px-3 rounded-md border"
           />
