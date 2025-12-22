@@ -144,9 +144,6 @@ export default function ImageAnalysis() {
           placeholder="First, enter your text to recognize ingredients."
           className="w-full py-2 px-3 rounded-md border resize-none min-h-24"
         />
-        {/* <div className="w-full py-2 px-3 rounded-md border bg-gray-100 text-gray-500 cursor-not-allowed">
-          {displayText || "First, enter your image to recognize ingredients."}
-        </div> */}
       </div>
     </div>
   );
